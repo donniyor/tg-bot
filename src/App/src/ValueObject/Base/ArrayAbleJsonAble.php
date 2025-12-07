@@ -14,7 +14,7 @@ abstract readonly class ArrayAbleJsonAble implements ArrayAbleInterface, JsonAbl
     #[Override]
     public static function fromJson(string $json): static
     {
-        return static::fromArray((array) (json_decode($json, true)));
+        return static::fromArray((array) (json_decode($json, true) ?? []));
     }
 
     #[Override]

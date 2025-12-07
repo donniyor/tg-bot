@@ -8,11 +8,12 @@ use App\ValueObject\Base\ArrayAbleJsonAble;
 use App\ValueObject\Telegram\Message\TelegramTextMessage;
 use Override;
 
-final readonly class TelegramTextMessageRequestVO extends ArrayAbleJsonAble
+final readonly class TelegramTextMessageRequestVO extends TelegramAbstractRequest
 {
 
-    public function __construct(public int $update_id, public TelegramTextMessage $message)
+    public function __construct(int $update_id, public TelegramTextMessage $message)
     {
+        parent::__construct($update_id);
     }
 
     #[Override]
@@ -28,7 +29,7 @@ final readonly class TelegramTextMessageRequestVO extends ArrayAbleJsonAble
     public function toArray(): array
     {
         return [
-            'update_id' => $this->update_id,
+            ...parent::toArray(),
             'message' => $this->message->toArray(),
         ];
     }

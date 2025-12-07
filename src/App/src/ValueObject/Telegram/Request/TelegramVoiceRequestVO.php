@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace App\ValueObject\Telegram\Request;
 
-use App\ValueObject\Base\ArrayAbleJsonAble;
-use App\ValueObject\Telegram\Message\TelegramTextMessage;
 use App\ValueObject\Telegram\Message\TelegramVoiceMessage;
 use Override;
 
-final readonly class TelegramTextVoiceRequestVO extends ArrayAbleJsonAble
+final readonly class TelegramVoiceRequestVO extends TelegramAbstractRequest
 {
 
-    public function __construct(public int $update_id, public TelegramVoiceMessage $message)
+    public function __construct(int $update_id, public TelegramVoiceMessage $message)
     {
+        parent::__construct($update_id);
     }
 
     #[Override]
@@ -29,7 +28,7 @@ final readonly class TelegramTextVoiceRequestVO extends ArrayAbleJsonAble
     public function toArray(): array
     {
         return [
-            'update_id' => $this->update_id,
+            ...parent::toArray(),
             'message' => $this->message->toArray(),
         ];
     }

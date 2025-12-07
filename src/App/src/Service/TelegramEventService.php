@@ -4,10 +4,17 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-class TelegramEventService
+use App\ValueObject\Telegram\Request\TelegramAbstractRequest;
+use Psr\Log\LoggerInterface;
+
+final readonly class TelegramEventService
 {
-    public function drill(): string
+    public function __construct(private LoggerInterface $logger)
     {
-        return 'drill';
+    }
+
+    public function handle(TelegramAbstractRequest $request): void
+    {
+        $this->logger->info('Done', ['updated_id' => $request->update_id]);
     }
 }
