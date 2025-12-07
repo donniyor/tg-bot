@@ -1,0 +1,24 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Symfony\Component\Console\Application;
+use App\Command\WorkerStartedCommand;
+
+require 'vendor/autoload.php';
+
+$container = require 'config/container.php';
+
+$application = new Application();
+
+$commands = [
+    new WorkerStartedCommand(),
+];
+
+foreach ($commands as $command) {
+    $command->setContainer($container);
+    $application->addCommand($command);
+}
+
+$application->run();

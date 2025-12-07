@@ -13,7 +13,7 @@ final readonly class TelegramEventService
     {
     }
 
-    public function handle(TelegramAbstractRequest $request): void
+    public function process(TelegramAbstractRequest $request): void
     {
         $this->logger->info('Done', ['updated_id' => $request->update_id]);
     }

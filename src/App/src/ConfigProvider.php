@@ -10,7 +10,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @see https://docs.laminas.dev/laminas-component-installer/
  */
-class ConfigProvider
+final readonly class ConfigProvider
 {
     public function __invoke(): array
     {

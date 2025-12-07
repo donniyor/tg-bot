@@ -32,7 +32,7 @@ final readonly class TelegramEventHandler implements RequestHandlerInterface
 
         $this->logger->info('Incoming web hook', $data);
 
-        $this->eventService->handle($this->builder->buildFromArray($data));
+        $this->eventService->process($this->builder->buildFromArray($data));
 
         return new JsonResponse(['status' => 'ok'], StatusCodeInterface::STATUS_OK);
     }
