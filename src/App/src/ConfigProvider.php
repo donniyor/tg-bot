@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App;
 
 use App\Factory\LoggerFactory;
+use App\Handler\PingHandler;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -29,11 +30,25 @@ final readonly class ConfigProvider
             'factories' => [
                 LoggerInterface::class => LoggerFactory::class,
             ],
+            'auto' => $this->getTypes(),
         ];
     }
 
     public function getTemplates(): array
     {
         return [];
+    }
+
+    private function getTypes(): array
+    {
+        return [
+            'types' => [
+                PingHandler::class => [
+                    'parameters' => [
+                        'ping' => 'test',
+                    ],
+                ],
+            ],
+        ];
     }
 }

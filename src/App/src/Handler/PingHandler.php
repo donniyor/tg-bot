@@ -16,14 +16,14 @@ use function time;
 
 final readonly class PingHandler implements RequestHandlerInterface
 {
-    public function __construct(private LoggerInterface $logger)
+    public function __construct(private LoggerInterface $logger, private string $ping)
     {
     }
 
     #[Override]
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $log = ['ack' => time()];
+        $log = ['ack' => time(), 'ping' => $this->ping];
         $this->logger->info('Ping', $log);
 
         return new JsonResponse($log);
