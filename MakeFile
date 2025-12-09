@@ -1,0 +1,3 @@
+.PHONY: chmod
+chmod:
+	chmod +x bin/console

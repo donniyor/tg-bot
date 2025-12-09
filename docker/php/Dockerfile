@@ -7,6 +7,9 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
     libcurl4-openssl-dev \
+    librdkafka-dev \
+    && pecl install rdkafka \
+    && docker-php-ext-enable rdkafka \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
