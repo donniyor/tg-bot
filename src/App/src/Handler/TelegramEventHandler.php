@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Handler;
 
 use App\Builder\TelegramRequestBuilder;
-use App\Service\TelegramEventService;
+use App\Service\TelegramQueueService;
 use Fig\Http\Message\StatusCodeInterface;
 use Laminas\Diactoros\Response\JsonResponse;
 use Override;
@@ -19,7 +19,7 @@ use function json_decode;
 final readonly class TelegramEventHandler implements RequestHandlerInterface
 {
     public function __construct(
-        private TelegramEventService $eventService,
+        private TelegramQueueService $queueService,
         private TelegramRequestBuilder $builder,
         private LoggerInterface $logger
     ) {
@@ -32,7 +32,7 @@ final readonly class TelegramEventHandler implements RequestHandlerInterface
 
         $this->logger->info('Incoming web hook', $data);
 
-        $this->eventService->process($this->builder->buildFromArray($data));
+        $this->queueService->addToQueue($this->builder->buildFromArray($data));
 
         return new JsonResponse(['status' => 'ok'], StatusCodeInterface::STATUS_OK);
     }

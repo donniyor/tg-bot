@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Queue\Interface;
 
-use App\Worker\Worker\WorkerInterface;
+use App\Worker\Interface\WorkerInterface;
 
 interface WorkerProviderInterface
 {

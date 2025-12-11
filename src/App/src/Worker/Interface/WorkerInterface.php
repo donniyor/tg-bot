@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Worker\Worker;
+namespace App\Worker\Interface;
 
 use App\Queue\Interface\WorkerProviderInterface;
 

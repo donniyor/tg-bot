@@ -10,13 +10,13 @@ use App\ValueObject\Telegram\Request\TelegramAbstractRequest;
 use App\Worker\WorkerList;
 use Psr\Log\LoggerInterface;
 
-final readonly class TelegramEventService
+final readonly class TelegramQueueService
 {
     public function __construct(private LoggerInterface $logger, private KafkaQueue $queue)
     {
     }
 
-    public function process(TelegramAbstractRequest $request): void
+    public function addToQueue(TelegramAbstractRequest $request): void
     {
         $this->logger->info('Done', ['updated_id' => $request->update_id]);
 

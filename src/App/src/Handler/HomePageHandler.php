@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
-use App\Service\TelegramEventService;
 use Laminas\Diactoros\Response\JsonResponse;
 use Mezzio\Router\FastRouteRouter;
 use Mezzio\Router\RouterInterface;
@@ -15,7 +14,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 final readonly class HomePageHandler implements RequestHandlerInterface
 {
-    public function __construct(private RouterInterface $router, private TelegramEventService $eventService)
+    public function __construct(private RouterInterface $router)
     {
     }
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Queue\Kafka;
 
-use App\Worker\Worker\WorkerInterface;
+use App\Worker\Interface\WorkerInterface;
 
 final readonly class KafkaWorkerGroup
 {

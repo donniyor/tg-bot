@@ -6,7 +6,7 @@ namespace App\Command;
 
 use App\Queue\Interface\WorkerProviderInterface;
 use App\Queue\Kafka\KafkaWorkerProvider;
-use App\Worker\Worker\WorkerInterface;
+use App\Worker\Interface\WorkerInterface;
 use App\Worker\WorkerList;
 use Override;
 use Psr\Container\ContainerExceptionInterface;

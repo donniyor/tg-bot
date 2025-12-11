@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Queue\Kafka;
 
 use App\Queue\Interface\WorkerProviderInterface;
-use App\Worker\Worker\WorkerInterface;
+use App\Worker\Interface\WorkerInterface;
 use Override;
 
 final class KafkaWorkerProvider implements WorkerProviderInterface
