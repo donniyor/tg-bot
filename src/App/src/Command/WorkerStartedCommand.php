@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Queue\KafkaWorkerProvider;
+use App\Worker\Worker\WorkerInterface;
 use App\Worker\WorkerList;
-use Enqueue\RdKafka\RdKafkaConnectionFactory;
 use Override;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,10 +19,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @example php bin/console lead:sync:worker --queue=event.worker
  */
-class WorkerStartedCommand extends BaseCommand
+final class WorkerStartedCommand extends BaseCommand
 {
     private LoggerInterface $logger;
     private WorkerList $list;
+    private KafkaWorkerProvider $provider;
 
     private array $queue;
 
@@ -28,15 +32,14 @@ class WorkerStartedCommand extends BaseCommand
     {
         parent::configure();
 
-        $this->setName('system:work');
-        $this->setDescription('Worker');
-
-        $this->addOption(
-            'queue',
-            null,
-            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-            'Queue names',
-        );
+        $this->setName('system:work')
+            ->setDescription('Worker')
+            ->addOption(
+                'queue',
+                null,
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'Queue names',
+            );
     }
 
     #[Override]
@@ -47,8 +50,13 @@ class WorkerStartedCommand extends BaseCommand
 
         $this->logger = $this->container->get(LoggerInterface::class);
         $this->list = $this->container->get(WorkerList::class);
+        $this->provider = $this->container->get(KafkaWorkerProvider::class);
     }
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -56,37 +64,23 @@ class WorkerStartedCommand extends BaseCommand
 
         $this->logger->info('Worker started', $this->queue);
 
+        $provider = null;
+        /** @var string $queue */
         foreach ($this->queue as $queue) {
             if (isset($this->list->getAll()[$queue]) && $this->container->has($this->list->getAll()[$queue])) {
-                $da = $this->container->get($this->list->getAll()[$queue]);
-                $da();
+                /** @var WorkerInterface $class */
+                $class = $this->container->get((string) ($this->list->getAll()[$queue]));
+                $broker = (string) $this->list->getAllBrokers()[$queue];
+
+                if (WorkerList::DEFAULT_BROKER === $broker) {
+                    $provider = $this->provider->init($queue, $class);
+                }
             }
         }
 
-        $factory = new RdKafkaConnectionFactory([
-            'global' => [
-                'bootstrap.servers' => 'broker:9092',
-            ],
-        ]);
-
-        
-        $context = $factory->createContext();
-
-        // Продюсер
-        $producer = $context->createProducer();
-        $message = $context->createMessage('Hello Kafka!');
-        $topic = $context->createTopic('test-topic');
-        $producer->send($topic, $message);
-        echo "Message sent!\n";
-
-        // Консюмер
-        $consumer = $context->createConsumer($topic);
-
-        while (true) {
-            $message = $consumer->receive();
-            if ($message !== null) {
-                echo 'Received: ' . $message->getBody() . PHP_EOL;
-                $consumer->acknowledge($message);
+        if ($provider instanceof KafkaWorkerProvider) {
+            while (true) {
+                $provider->work();
             }
         }
 

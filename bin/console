@@ -3,6 +3,7 @@
 
 declare(strict_types=1);
 
+use App\Command\TestKafkaWorkerCommand;
 use Symfony\Component\Console\Application;
 use App\Command\WorkerStartedCommand;
 
@@ -14,6 +15,7 @@ $application = new Application();
 
 $commands = [
     new WorkerStartedCommand(),
+    new TestKafkaWorkerCommand(),
 ];
 
 foreach ($commands as $command) {

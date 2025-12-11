@@ -19,4 +19,9 @@ final readonly class TelegramRequestBuilder
             default => TelegramNullRequestVO::fromArray($data),
         };
     }
+
+    public function buildFromJson(string $data): TelegramAbstractRequest
+    {
+        return $this->buildFromArray((array) (json_decode($data, true) ?? []));
+    }
 }
