@@ -2,20 +2,24 @@
 
 declare(strict_types=1);
 
-namespace App\Queue;
+namespace App\Queue\Kafka;
 
+use App\Queue\Interface\WorkerProviderInterface;
 use App\Worker\Worker\WorkerInterface;
-use Psr\Log\LoggerInterface;
+use Override;
 
-final class KafkaWorkerProvider
+final class KafkaWorkerProvider implements WorkerProviderInterface
 {
+    private const int TIMEOUT = 10000;
+
     /** @var KafkaWorkerGroup[] */
     private static array $queues = [];
 
-    public function __construct(private KafkaQueue $queue, private LoggerInterface $logger)
+    public function __construct(private readonly KafkaQueue $queue)
     {
     }
 
+    #[Override]
     public function init(string $queue, WorkerInterface $worker): self
     {
         if (!isset(self::$queues[$queue])) {
@@ -25,20 +29,19 @@ final class KafkaWorkerProvider
         return $this;
     }
 
+    #[Override]
     public function work(): self
     {
         foreach (self::$queues as $group) {
-            $this->logger->info('Search in: ' . $group->queue);
             $message = $this->queue->get($group->queue);
 
             if (null !== $message) {
-                $this->logger->info('Finding message: ' . $message->getBody());
                 call_user_func($group->worker, $message->getBody());
                 $this->queue->flush($group->queue, $message);
             }
         }
 
-        usleep(10000);
+        usleep(self::TIMEOUT);
 
         return $this;
     }

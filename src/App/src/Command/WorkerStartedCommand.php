@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Queue\KafkaWorkerProvider;
+use App\Queue\Interface\WorkerProviderInterface;
+use App\Queue\Kafka\KafkaWorkerProvider;
 use App\Worker\Worker\WorkerInterface;
 use App\Worker\WorkerList;
 use Override;
@@ -23,7 +24,7 @@ final class WorkerStartedCommand extends BaseCommand
 {
     private LoggerInterface $logger;
     private WorkerList $list;
-    private KafkaWorkerProvider $provider;
+    private WorkerProviderInterface $provider;
 
     private array $queue;
 

@@ -6,6 +6,8 @@ namespace App;
 
 use App\Factory\LoggerFactory;
 use App\Handler\PingHandler;
+use App\Queue\Factory\KafkaConnectionFactory;
+use Interop\Queue\ConnectionFactory;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -29,6 +31,7 @@ final readonly class ConfigProvider
             ],
             'factories' => [
                 LoggerInterface::class => LoggerFactory::class,
+                ConnectionFactory::class => KafkaConnectionFactory::class,
             ],
             'auto' => $this->getTypes(),
         ];

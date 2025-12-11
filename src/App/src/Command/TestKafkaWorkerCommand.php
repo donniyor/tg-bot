@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Builder\TelegramRequestBuilder;
-use App\Queue\KafkaQueue;
-use App\Queue\QueueException;
+use App\Queue\Exception\QueueException;
+use App\Queue\Kafka\KafkaQueue;
 use App\Worker\WorkerList;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;

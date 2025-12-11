@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Queue;
+namespace App\Queue\Kafka;
 
+use App\Queue\Exception\QueueException;
+use App\Queue\Interface\QueueInterface;
 use Enqueue\RdKafka\RdKafkaConnectionFactory;
 use Interop\Queue\ConnectionFactory;
 use Interop\Queue\Consumer;
@@ -13,27 +15,19 @@ use Interop\Queue\Exception\InvalidDestinationException;
 use Interop\Queue\Exception\InvalidMessageException;
 use Interop\Queue\Message;
 use Interop\Queue\Producer;
+use Override;
 
-final class KafkaQueue
+final class KafkaQueue implements QueueInterface
 {
     private const int TIMEOUT = 1;
 
-    private ConnectionFactory $factory;
     private Context $context;
     private Producer $producer;
     /** @var Consumer[] */
     private array $consumers = [];
 
-    public function __construct(private readonly string $groupId = 'default_group')
+    public function __construct(private readonly ConnectionFactory $factory)
     {
-        // todo вынести в фабрику
-        $this->factory = new RdKafkaConnectionFactory([
-            'global' => [
-                'bootstrap.servers' => 'broker:9092',
-                'group.id' => $this->groupId,
-            ],
-        ]);
-
         $this->context = $this->factory->createContext();
         $this->producer = $this->context->createProducer();
     }
@@ -41,6 +35,7 @@ final class KafkaQueue
     /**
      * @throws QueueException
      */
+    #[Override]
     public function send(string $queue, string $data): void
     {
         try {
@@ -53,11 +48,13 @@ final class KafkaQueue
         }
     }
 
+    #[Override]
     public function get(string $queue): ?Message
     {
         return $this->getConsumer($queue)->receive(self::TIMEOUT);
     }
 
+    #[Override]
     public function flush(string $queue, Message $message): void
     {
         $this->getConsumer($queue)->acknowledge($message);
