@@ -8,3 +8,4 @@
 /.idea
 /.laminas-ci
 .env
+.DS_Store
