@@ -61,7 +61,8 @@
     "mezzio/mezzio-helpers": "^5.17",
     "monolog/monolog": "^3.9",
     "pimple/pimple": "^3.0",
-    "symfony/dotenv": "^7.4"
+    "symfony/dotenv": "^7.4",
+    "ext-fileinfo": "*"
   },
   "require-dev": {
     "laminas/laminas-coding-standard": "~2.5.0",

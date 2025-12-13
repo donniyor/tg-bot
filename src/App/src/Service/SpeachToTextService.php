@@ -27,7 +27,7 @@ final readonly class SpeachToTextService
         // todo что за кринж исправить позже
         $cmd = escapeshellarg($whisperCli)
             . ' -f ' . escapeshellarg($tmpPath)
-            . ' -m ' . escapeshellarg('/var/www/whisper.cpp/models/ggml-base.en.bin')
+            . ' -m ' . escapeshellarg('/var/www/whisper.cpp/models/ggml-base.bin')
             . ' --no-prints --no-timestamps 2>&1';
 
         $exec = shell_exec($cmd);

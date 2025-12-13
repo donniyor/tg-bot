@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     librdkafka-dev \
     cmake \
     build-essential \
+    ffmpeg \
     && pecl install rdkafka \
     && docker-php-ext-enable rdkafka \
     && apt-get clean && rm -rf /var/lib/apt/lists/*

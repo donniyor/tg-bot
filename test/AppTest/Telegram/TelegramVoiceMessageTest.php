@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AppTest\Telegram;
 
-use App\ValueObject\Telegram\Request\TelegramVoiceRequestVO;
+use App\ValueObject\Telegram\Request\TelegramMessageVoiceRequestVO;
 use PHPUnit\Framework\TestCase;
 
 final class TelegramVoiceMessageTest extends TestCase
@@ -40,7 +40,7 @@ final class TelegramVoiceMessageTest extends TestCase
 
     public function testJsonBuild(): void
     {
-        $request = TelegramVoiceRequestVO::fromJson($this->json);
+        $request = TelegramMessageVoiceRequestVO::fromJson($this->json);
 
         self::assertEquals(
             $request->toJson(),

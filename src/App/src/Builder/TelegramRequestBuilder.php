@@ -7,7 +7,7 @@ namespace App\Builder;
 use App\ValueObject\Telegram\Request\TelegramAbstractRequest;
 use App\ValueObject\Telegram\Request\TelegramNullRequestVO;
 use App\ValueObject\Telegram\Request\TelegramTextMessageRequestVO;
-use App\ValueObject\Telegram\Request\TelegramVoiceRequestVO;
+use App\ValueObject\Telegram\Request\TelegramMessageVoiceRequestVO;
 
 final readonly class TelegramRequestBuilder
 {
@@ -15,7 +15,7 @@ final readonly class TelegramRequestBuilder
     {
         return match (true) {
             isset($data['message']['text']) => TelegramTextMessageRequestVO::fromArray($data),
-            isset($data['message']['voice']) => TelegramVoiceRequestVO::fromArray($data),
+            isset($data['message']['voice']) => TelegramMessageVoiceRequestVO::fromArray($data),
             default => TelegramNullRequestVO::fromArray($data),
         };
     }

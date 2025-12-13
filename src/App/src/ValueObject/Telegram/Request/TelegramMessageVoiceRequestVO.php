@@ -7,7 +7,7 @@ namespace App\ValueObject\Telegram\Request;
 use App\ValueObject\Telegram\Message\TelegramVoiceMessage;
 use Override;
 
-final readonly class TelegramVoiceRequestVO extends TelegramAbstractRequest
+final readonly class TelegramMessageVoiceRequestVO extends TelegramAbstractRequest
 {
 
     public function __construct(int $update_id, public TelegramVoiceMessage $message)
