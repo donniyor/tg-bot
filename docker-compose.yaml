@@ -13,7 +13,7 @@
   php:
     &php
     container_name: php
-    build: ./docker/php
+    build: ./
     volumes:
       - .:/var/www
       - ./php.ini:/usr/local/etc/php/conf.d/php.ini

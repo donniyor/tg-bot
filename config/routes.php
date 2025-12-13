@@ -22,6 +22,12 @@ return static function (Application $app): void {
     );
 
     $app->post(
+        '/api/speach_to_text',
+        App\Handler\SpeachToText::class,
+        'api.speach.to.text',
+    );
+
+    $app->post(
         '/api/v1/event/message[/]',
         TelegramEventHandler::class,
         'api.v1.event.message',
