@@ -32,7 +32,7 @@
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker:9093
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER      
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
@@ -41,11 +41,27 @@
     networks:
       - app-network
 
+  broker-init:
+    image: apache/kafka:latest
+    depends_on:
+      - broker
+    entrypoint: >
+      sh -c "
+        until /opt/kafka/bin/kafka-topics.sh --bootstrap-server broker:9092 --list; do
+          echo waiting for kafka…
+          sleep 3
+        done;
+        /opt/kafka/bin/kafka-topics.sh --bootstrap-server broker:9092 --create --topic event.worker --partitions 3 --replication-factor 1;
+        echo Topics created
+      "
+    networks:
+      - app-network
+
   worker:
     container_name: worker
     <<: *php
-    entrypoint: [ "bin/console","system:work","--queue=event.worker"]
-    restart: on-failure
+    entrypoint: [ "bin/console","system:work","--queue=event.worker" ]
+    restart: unless-stopped
     networks:
       - app-network
 
